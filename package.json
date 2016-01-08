@@ -21,5 +21,12 @@
   "bugs": {
     "url": "https://github.com/IoTboy/commercial-zigbee-device-daemon/issues"
   },
-  "homepage": "https://github.com/IoTboy/commercial-zigbee-device-daemon#readme"
+  "homepage": "https://github.com/IoTboy/commercial-zigbee-device-daemon#readme",
+  "dependencies": {
+    "colorspaces": "^0.1.4",
+    "concentrate": "^0.2.3",
+    "lodash": "^3.10.1",
+    "serialport": "^2.0.6",
+    "zigbee": "0.0.1"
+  }
 }
