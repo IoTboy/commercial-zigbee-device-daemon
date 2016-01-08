@@ -1,0 +1,17 @@
+{
+  "name": "commercial-zigbee-device-daemon",
+  "version": "1.0.0",
+  "description": "controls the zigbee powered sensors using ZigBee CC2531 dongle",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kona",
+  "license": "MIT",
+  "keywords": [
+    "iot",
+    "zigbee",
+    "hue",
+    "gateway"
+  ]
+}
