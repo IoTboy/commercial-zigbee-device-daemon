@@ -13,5 +13,13 @@
     "zigbee",
     "hue",
     "gateway"
-  ]
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IoTboy/commercial-zigbee-device-daemon.git"
+  },
+  "bugs": {
+    "url": "https://github.com/IoTboy/commercial-zigbee-device-daemon/issues"
+  },
+  "homepage": "https://github.com/IoTboy/commercial-zigbee-device-daemon#readme"
 }
