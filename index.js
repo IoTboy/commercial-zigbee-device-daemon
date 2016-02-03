@@ -61,6 +61,7 @@ function zigbeeDevice(json){
             if (seen[device.IEEEAddress]) {
               return;
             }
+            seen[device.IEEEAddress] = true;
             //console.log("Living Room Device: " + self.config.IEEEHueLivingRoom);
             console.log('Found', device.toString());
             device.on('endpoint', function(endpoint) {
@@ -69,7 +70,6 @@ function zigbeeDevice(json){
               endpoint.inClusters().then(function(clusters) {
                 clusters.forEach(function(cluster) {
                   console.log('Cluster: ', cluster.toString());
-                  seen[device.IEEEAddress] = true;
                   // if(cluster.name == 'Level Control') {
                   //   cluster.attributes.CurrentLevel.read().then(function(level) {
                   //     console.log('Current level', level);
@@ -84,18 +84,17 @@ function zigbeeDevice(json){
                   console.log('Set Living Room Color Variable');
 
                   if(self.colorCluster_HueLivingRoom){
-                    setColor(self.colorCluster_HueLivingRoom, '#FF00FF');
+                    self.setColor(self.colorCluster_HueLivingRoom, '#FFFFFF');
                     console.log('Variable NOT NULL Call setColor');
                   }
                 }
               });
             });
-          }
-          device.findActiveEndpoints();
-          device.findEndpoints(0x0104, [0x0500], [0x0500]); // HA IAS Zones.
+            device.findActiveEndpoints();
+            device.findEndpoints(0x0104, [0x0500], [0x0500]); // HA IAS Zones.
+          });
         });
-      });
-    }, 5000);
+    }, 15000);
   });
 };
 
@@ -110,8 +109,9 @@ zigbeeDevice.prototype.setPower = function(value) {
 };
 
 zigbeeDevice.prototype.changeBrightness = function(value) {
+  console.log('In changeBrightness');
   if(!self.levelControlCluster_HueLivingRoom)
-  return;
+    return;
   var payload = new concentrate();
   payload.uint8(value); // Level
   payload.uint16le(0); // Transition duration (1/10th seconds)

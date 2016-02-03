@@ -84,13 +84,13 @@ function periodicActivity() //
   var reqdBrightness = float2int(intensity);
   console.log('Required Brightness: ' + reqdBrightness);
 //  if(luxValue < 25)
-    zigbee.changeBrightness(reqdBrightness);    
+    zigbee.changeBrightness(reqdBrightness);
   if(motionDetected)
-    interval = 2000;
+    interval = 3000;
   else
     interval = 500;
   //zigbee.setPower(motionDetected);
-  
+
   setTimeout(periodicActivity, interval); //call the indicated function after 1 secon
 }
 
@@ -114,4 +114,3 @@ setInterval(function() {
 
 	zigbee.setColor(zigbee.colorCluster_HueLivingRoom, '#FF0000');
 }, 15000);
-
