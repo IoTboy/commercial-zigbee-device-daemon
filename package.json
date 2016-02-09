@@ -1,6 +1,6 @@
 {
   "name": "commercial-zigbee-device-daemon",
-  "version": "1.0.1",
+  "version": "1.0.5",
   "description": "controls the zigbee powered sensors using ZigBee CC2531 dongle",
   "main": "index.js",
   "scripts": {

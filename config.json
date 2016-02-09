@@ -1,7 +1,11 @@
 {
+	"port" : "/dev/ttyACM0",
 	"IEEEHueLivingRoom" : "00178801003F8A13",
 	"IEEEHueMaterBedroom" : "000D6F0002F80A8F",
+	"IEEEHueBathroom" : "000D6F000B66387E",
 	"IEEEHueChildrenRoom" : "00178801105470E0",
+	"SmartSenseMulti": "000D6F0003FEE12A",
 	"HueEndPoint" : 11,
-	"CreeEndPoint" : 10	
+	"CreeEndPoint" : 10,
+	"SmartThingsEndPoint" : 1
 }

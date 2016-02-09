@@ -35,6 +35,10 @@ function zigbeeDevice(json){
   self.colorCluster_HueLivingRoom = null;
   self.levelControlCluster_HueLivingRoom = null;
   self.onOffCluster_HueLivingRoom = null;
+  self.onOffCluster_HueBathRoom = null;
+  self.iasCluster_MultiSensor = null;
+  self.prev_state = 0;
+  self.curr_state = 0;
   self.config = json;
 
   zigbeeDevice.prototype.init = function() {
@@ -88,6 +92,27 @@ function zigbeeDevice(json){
                     console.log('Variable NOT NULL Call setColor');
                   }
                 }
+
+                if(( device.IEEEAddress == self.config.IEEEHueBathroom) && (endpoint.endpointId == self.config.CreeEndPoint)) {
+                  console.log('Set BathRoom OnOff variable');
+                  exports.onOffCluster_HueBathRoom = self.onOffCluster_HueBathRoom = _.findWhere(clusters, {name: 'On/Off'});
+
+                  if(self.onOffCluster_HueBathRoom){
+                    self.setPower(self.onOffCluster_HueBathRoom, 0);
+                    console.log('Variable NOT NULL Call setPower');
+                  }
+                }
+
+                if(( device.IEEEAddress == self.config.SmartSenseMulti) && (endpoint.endpointId == self.config.SmartThingsEndPoint)) {
+                  console.log('Set MultiSensor IAS variable');
+                  exports.iasCluster_MultiSensor = self.iasCluster_MultiSensor = _.findWhere(clusters, {name: 'IAS Zone'});
+
+                  if(self.iasCluster_MultiSensor){
+                    self.getIasStatus(self.iasCluster_MultiSensor);
+                    console.log('Variable NOT NULL Call getIasStatus');
+                  }
+                }
+
               });
             });
             device.findActiveEndpoints();
@@ -98,31 +123,57 @@ function zigbeeDevice(json){
   });
 };
 
-zigbeeDevice.prototype.setPower = function(value) {
-  if(!self.onOffCluster_HueLivingRoom)
+zigbeeDevice.prototype.getIasStatus = function(cluster) {
+  console.log("In getIasStatus");
+	setInterval(function() {
+		if(cluster){
+			cluster.attributes.ZoneStatus.read().then(function(level) {
+        console.log(level);
+				self.curr_state = level[0]&1;
+				if(self.prev_state != self.curr_state){
+					console.log("THERE IS CHANGE IN CLOSED / MOTION / DRY");
+          var color_val = to_rgb(255,0,0);
+					if(self.curr_state == 1){
+						console.log("OPEN");
+						self.setColor(self.colorCluster_HueLivingRoom, color_val);
+					} else {
+						console.log("CLOSED");
+						color_val = to_rgb(0,255,0);
+						self.setColor(self.colorCluster_HueLivingRoom, color_val);
+					}
+					self.prev_state = self.curr_state;
+				}
+			});
+		}
+	}, 6000);
+};
+
+zigbeeDevice.prototype.setPower = function(cluster, value) {
+  if(!cluster)
   return;
   console.log('In set power: ', value);
   if(value)
-  self.onOffCluster_HueLivingRoom.commands.On();
+    cluster.commands.On();
   else
-  self.onOffCluster_HueLivingRoom.commands.Off();
+    cluster.commands.Off();
 };
 
-zigbeeDevice.prototype.changeBrightness = function(value) {
+zigbeeDevice.prototype.changeBrightness = function(cluster, value) {
   console.log('In changeBrightness');
-  if(!self.levelControlCluster_HueLivingRoom)
+  if(!cluster)
     return;
+    console.log('In changeBrightness .... 1');
   var payload = new concentrate();
+  console.log('In changeBrightness ... 2');
   payload.uint8(value); // Level
+  console.log('In changeBrightness ...3');
   payload.uint16le(0); // Transition duration (1/10th seconds)
-  self.levelControlCluster_HueLivingRoom.commands['Move to Level (with On/Off)'](payload.result()).done();
+  cluster.commands['Move to Level (with On/Off)'](payload.result()).done();
 };
 
 zigbeeDevice.prototype.setColor = function(cluster, hex) {
   console.log('In setColor');
   if(!cluster) return;
-  if(!self.colorCluster_HueLivingRoom)
-  return;
   console.log('Set Color: ' + hex);
   var color = colorspaces.make_color('hex', hex).as('CIExyY');
   var payload = new concentrate();

@@ -69,7 +69,7 @@ var waiting = setInterval(function() {
 	  myBuzzer.playSound(chords[0], 1000000);
 	}
 //        if (i == 10) clearInterval(waiting);
-        }, 1000);
+        }, 100000);
 
 periodicActivity(); //call the periodicActivity function
 
@@ -84,11 +84,11 @@ function periodicActivity() //
   var reqdBrightness = float2int(intensity);
   console.log('Required Brightness: ' + reqdBrightness);
 //  if(luxValue < 25)
-    zigbee.changeBrightness(reqdBrightness);
+    zigbee.changeBrightness(zigbee.levelControlCluster_HueLivingRoom, reqdBrightness);
   if(motionDetected)
-    interval = 3000;
+    interval = 30000;
   else
-    interval = 500;
+    interval = 5000;
   //zigbee.setPower(motionDetected);
 
   setTimeout(periodicActivity, interval); //call the indicated function after 1 secon
